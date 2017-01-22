@@ -1,0 +1,17 @@
+version: 0.1
+
+phases:
+  pre_build:
+    commands:
+      - echo Build started on `date`
+  build:
+    commands:
+      - NODE_ENV=development npm install
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - index.js
+    - node_modules/**/*
+    - config/*
