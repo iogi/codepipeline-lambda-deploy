@@ -1,0 +1,16 @@
+{
+  "name": "codepipeline-lambda-deploy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ippei Ogiwara <ogiwara@gmail.com> (https://github.com/iogi)",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.7.22",
+    "config": "^1.24.0",
+    "underscore": "^1.8.3"
+  }
+}
