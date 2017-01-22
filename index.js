@@ -8,9 +8,9 @@ const codepipeline = new AWS.CodePipeline();
 exports.handler = (event, context) => {
   console.log(JSON.stringify(event,null,2));
   console.log(JSON.stringify(context,null,2));
-	const job = event['CodePipeline.job'];
+  const job = event['CodePipeline.job'];
 
-	let userParams = parseUserParameters(job.data.actionConfiguration.configuration.UserParameters);
+  let userParams = parseUserParameters(job.data.actionConfiguration.configuration.UserParameters);
 
   getObject({job: job, userParams: userParams})
   .then(createFunction)
@@ -25,7 +25,7 @@ function getObject(params) {
   let s3Location = params.job.data.inputArtifacts[0].location.s3Location;
   let credentials = params.job.data.artifactCredentials;
 
-	const s3 = new AWS.S3({
+  const s3 = new AWS.S3({
     credentials: new AWS.Credentials(credentials),
     signatureVersion: 'v4'
   });
@@ -61,43 +61,43 @@ function createFunction(params) {
     region: params.userParams.Region || config.Region
   });
 
-	let createParams = {
-		Code: {
+  let createParams = {
+    Code: {
       ZipFile: params.data
-		},
-		Description: null,
-		FunctionName: null,
-		Handler: config.Handler,
-		MemorySize: config.MemorySize,
-		Publish: true,
-		Role: null,
-		Runtime: config.Runtime,
-		Timeout: config.Timeout,
-		VpcConfig: null,
-	}
-	// update using userParams
-	createParams = _.extend(createParams, _.pick(params.userParams, _.keys(createParams)));
-	createParams = _.omit(createParams, (v) => !v);
-	console.log(createParams);
+    },
+    Description: null,
+    FunctionName: null,
+    Handler: config.Handler,
+    MemorySize: config.MemorySize,
+    Publish: true,
+    Role: null,
+    Runtime: config.Runtime,
+    Timeout: config.Timeout,
+    VpcConfig: null,
+  }
+  // update using userParams
+  createParams = _.extend(createParams, _.pick(params.userParams, _.keys(createParams)));
+  createParams = _.omit(createParams, (v) => !v);
+  console.log(createParams);
 
   createParams = _.chain(createParams)
   .extend(_.pick(params.userParams, _.keys(createParams)))
   .omit(createParams, (v) => !v)
   .value()
-	console.log(createParams);
-	
-	let updateParams = {
-		FunctionName: createParams.FunctionName, 
-		Publish: true, 
+  console.log(createParams);
+  
+  let updateParams = {
+    FunctionName: createParams.FunctionName, 
+    Publish: true, 
     ZipFile: params.data
-	};
-	
+  };
+  
   return new Promise((resolve, reject) => {
     lambda.createFunction(createParams, (err, data) => {
-			if (!err) {
+      if (!err) {
         resolve(_.extend(params, {data: data}));
-			} else if (err.code == 'ResourceConflictException') {
-				// call update function
+      } else if (err.code == 'ResourceConflictException') {
+        // call update function
         console.log('createFunction returns ResourceConflictException, trying to update');
         lambda.updateFunctionCode(updateParams, (err, data) => {
           if (err) {
@@ -105,14 +105,14 @@ function createFunction(params) {
             reject(new Error(err));
           } else {
             // TODO: update configuration if exist configuration is different
-						resolve(_.extend(params, {data: data}));
-					}
+            resolve(_.extend(params, {data: data}));
+          }
         });
       } else {
         console.log('createFunction failed', err);
-				reject(new Error(err));
+        reject(new Error(err));
       }
-		});
+    });
   });
 }
 
