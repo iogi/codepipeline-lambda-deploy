@@ -1,5 +1,5 @@
 {
-  "name": "codepipeline-lambda-deploy",
+  "name": "@iogi/codepipeline-lambda-deploy",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,6 +8,10 @@
   },
   "author": "Ippei Ogiwara <ogiwara@gmail.com> (https://github.com/iogi)",
   "license": "ISC",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": "github.com/iogi/codepipeline-lambda-deploy",
   "dependencies": {
     "aws-sdk": "^2.9.0",
     "config": "^1.24.0",
