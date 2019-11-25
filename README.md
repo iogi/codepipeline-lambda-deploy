@@ -28,3 +28,7 @@ npm install
 ## Author
 
 [iogi](https://github.com/iogi)
+
+## License
+
+This project is licensed under the terms of the MIT license.
